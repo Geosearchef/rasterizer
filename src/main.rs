@@ -1,14 +1,15 @@
 mod util;
 mod image;
+mod pipeline;
 
 use crate::image::DynamicImage;
+use crate::pipeline::rendering::render_scene_to_image;
 use chrono::{DateTime, Local};
 use iced::event::Status;
 use iced::mouse::Cursor;
 use iced::widget::canvas::{Event, Geometry};
 use iced::widget::{canvas, Canvas};
 use iced::{time, Element, Fill, Rectangle, Size, Subscription, Theme};
-use std::ops::Deref;
 use std::time::Duration;
 
 const WINDOW_TITLE: &str = "Render";
@@ -55,11 +56,14 @@ impl Application {
 
                 // This is expensive
                 let start = Local::now().timestamp_millis();
-                for y in 0..self.frame_buffer.height {
-                    for x in 0..self.frame_buffer.width {
-                        self.frame_buffer.set_rgba(x, y, (0u8, (time.timestamp_millis() / 5 % 255) as u8, 0u8, 255u8));
-                    }
-                }
+                // for y in 0..self.frame_buffer.height {
+                //     for x in 0..self.frame_buffer.width {
+                //         self.frame_buffer.set_rgba(x, y, (0u8, (time.timestamp_millis() / 5 % 255) as u8, 0u8, 255u8));
+                //     }
+                // }
+
+                render_scene_to_image(&mut self.frame_buffer);
+
                 println!("Took {} ms", Local::now().timestamp_millis() - start);
             }
         };
@@ -91,7 +95,11 @@ impl<'a> canvas::Program<Message> for CanvasRenderer<'a> {
         let mut frame = canvas::Frame::new(renderer, bounds.size());
 
         frame.draw_image(bounds, self.application.frame_buffer.to_iced_image()); // clones the frame buffer
-        println!("{:?}", self.application.frame_buffer.get_rgba(10, 10));
+
+        // frame.fill_rectangle(Point::new(100f32, 100f32), Size::new(20f32, 29f32), Color::new(0.0f32, 0.0f32, 0.5f32, 1.0f32));
+        // frame.fill_rectangle(Point::new(250f32, 350f32), Size::new(20f32, 29f32), Color::new(0.0f32, 0.0f32, 0.5f32, 1.0f32));
+        // frame.fill_rectangle(Point::new(200f32, 500f32), Size::new(20f32, 29f32), Color::new(0.0f32, 0.0f32, 0.5f32, 1.0f32));
+        // frame.fill_rectangle(Point::new(163f32, 350f32), Size::new(20f32, 29f32), Color::new(0.3f32, 0.0f32, 0.0f32, 1.0f32));
 
         vec![frame.into_geometry()]
     }

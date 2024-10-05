@@ -1,0 +1,12 @@
+Potential next steps:
+
+- run input metadata against rasterizer
+- Vertex shader
+  - model (view) matrix
+  - projection matrix
+- Fragment shader
+  - texture
+  - lighting
+
+
+- (read wavefront)
