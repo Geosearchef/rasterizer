@@ -27,7 +27,7 @@ fn main() {
         .antialiasing(true)
         .run() {
             Ok(_) => {},
-            Err(e) => println!("Couldn't create application wind")
+            Err(e) => println!("Couldn't create application wind due to {}", e.to_string())
         };
 }
 
